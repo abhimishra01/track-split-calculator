@@ -1,0 +1,11 @@
+// FAQ items. Rendered on the home page AND output as FAQPage JSON-LD. Plain text only.
+export const faq = [
+  { q: 'How do I calculate 400 m splits?', a: 'Divide your goal time by the race distance and multiply by 400. For a 5K in 20:00, that is 1200 s divided by 5000 m times 400 m, which is 96 s or 1:36.0 per lap. The last split covers the odd distance: 200 m in 48.0 s.' },
+  { q: 'What is a negative split?', a: 'A negative split means you run the second half of a race faster than the first half. Set Pacing to Negative, then enter how many seconds faster the second half should be. The calculator keeps your total time and shifts pace in a straight line across the race.' },
+  { q: 'How many laps is a mile on a track?', a: 'A mile is 1609.344 m. On a 400 m track that is 4 laps plus 9.34 m. A 1600 m race is exactly 4 laps. The calculator shows the odd 9.34 m as its own split.' },
+  { q: 'What does "at the finish line" mean?', a: 'On a real track, the start of an odd-length race is set back so that you cross the finish line at each later split. Choose At the finish line to put the odd distance first. Choose Every lap from the start to get a mark every lap length from the gun.' },
+  { q: 'Can I turn one lap time into a finish time?', a: 'Yes. Pick Lap to finish, choose the distance and type your lap time, like 90 or 1:30. The tool assumes the same pace on every lap and shows the finish time with all the splits. A 90 s 400 m lap held for 5000 m gives 18:45.0.' },
+  { q: 'How do I build an interval workout like 8 x 400?', a: 'Pick Intervals, enter your goal race distance and time, set the repeats and the repeat distance, then add the rest. Each repeat runs at the pace of the goal race. You get the time for each repeat, the running clock with rest, and the total session time.' },
+  { q: 'Does the calculator assume lane 1?', a: 'Yes. Each lap equals the lap length you pick, measured 30 cm out from the inside edge of lane 1. Running a whole lap in lane 2 adds about 7.7 m. That is about 1.8 s per lap at 1:36 pace.' },
+  { q: 'How do I print a pace band?', a: 'Press Print pace band under the table. Your browser opens its print window with only the band on the page, in black on white. Print it, cut it into strips and tape one to your wrist or the back of your hand.' },
+];

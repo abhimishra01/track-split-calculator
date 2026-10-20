@@ -1,0 +1,81 @@
+---
+// SEO article for the track split calculator.
+---
+<section aria-labelledby="about-tool" class="mx-auto max-w-5xl px-4 pt-16">
+  <article class="prose-site">
+    <h2 id="about-tool" style="margin-top:0">What a track split calculator does</h2>
+    <p>A track split calculator turns a goal time into the time you should hit at the end of every lap. You enter a race distance and a goal. The tool divides the race into laps of 200 m, 300 m, 400 m or any length you set. It then lists the time for each lap and the running total. Coaches use it to set targets. Runners copy it onto a wrist band or a phone note.</p>
+    <p>The same tool works the other way. Enter one lap time and it gives your finish time. It can also build an interval session, such as 8 x 400 m at your goal race pace.</p>
+
+    <h2>How to use the calculator</h2>
+    <ol>
+      <li>Pick what you want: goal to splits, lap to finish, or intervals.</li>
+      <li>Choose the race distance. The list has the common track and road races. Pick Custom to type your own in meters, kilometers or miles.</li>
+      <li>Type the goal time, like 20:00 for a 5K. A plain number counts as minutes.</li>
+      <li>Choose the lap length. A standard outdoor track is 400 m. Many indoor tracks are 200 m.</li>
+      <li>Pick even, negative or positive pacing. For a negative split, set how many seconds faster the second half should be.</li>
+      <li>Read the table, then print the pace band or copy the splits.</li>
+    </ol>
+
+    <h2>The math in one line</h2>
+    <p>Time per lap = goal time &divide; race distance &times; lap length. For a 5K in 20:00 on a 400 m track: 1200 s &divide; 5000 m &times; 400 m = 96 s, or 1:36.0 per lap. The race is 12.5 laps, so the last split covers 200 m and takes 48.0 s.</p>
+    <p>One mile is exactly 1609.344 m, by the 1959 international yard and pound agreement. On a 400 m track a mile is 4 laps plus 9.34 m. A mile in 4:00 is 59.7 s per 400 m.</p>
+
+    <h2>Even, negative and positive splits</h2>
+    <p>An even split holds the same pace on every lap. A negative split means the second half of the race is faster than the first. A positive split means it is slower. An even or slightly negative pace is a common plan for races from the mile up, because a start that is too fast often costs more time late in the race than it saves.</p>
+    <p>This calculator changes pace in a straight line across the race, so there are no sudden jumps between laps. You set the gap between the two halves. It keeps your total time exact. The tool rounds each running total to the nearest 0.1 s (or 1 s), then takes the lap times as differences, so the laps always add up to your goal.</p>
+    <p>Example: 5K in 20:00 with the second half 6 s faster. Lap 1 is 1:36.9, lap 6 is 1:36.1 and the lap at 4,800 m is 1:35.2. The halves are 10:03.0 and 9:57.0.</p>
+
+    <h2>400 m splits for common goal times</h2>
+    <p>These splits assume an even pace on a 400 m track, read from the start.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">5K goal</th><th scope="col">Per 400 m</th><th scope="col">Per km</th></tr></thead>
+        <tbody>
+          <tr><td>18:00</td><td>1:26.4</td><td>3:36.0</td></tr>
+          <tr><td>20:00</td><td>1:36.0</td><td>4:00.0</td></tr>
+          <tr><td>22:00</td><td>1:45.6</td><td>4:24.0</td></tr>
+          <tr><td>25:00</td><td>2:00.0</td><td>5:00.0</td></tr>
+          <tr><td>28:00</td><td>2:14.4</td><td>5:36.0</td></tr>
+          <tr><td>30:00</td><td>2:24.0</td><td>6:00.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th scope="col">Mile goal</th><th scope="col">Per 400 m</th><th scope="col">Per 200 m</th></tr></thead>
+        <tbody>
+          <tr><td>4:00</td><td>59.7</td><td>29.8</td></tr>
+          <tr><td>5:00</td><td>1:14.6</td><td>37.3</td></tr>
+          <tr><td>6:00</td><td>1:29.5</td><td>44.7</td></tr>
+          <tr><td>7:00</td><td>1:44.4</td><td>52.2</td></tr>
+          <tr><td>8:00</td><td>1:59.3</td><td>59.7</td></tr>
+          <tr><td>10:00</td><td>2:29.1</td><td>1:14.6</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Odd distances: read splits from the start or at the line</h2>
+    <p>Few races are a whole number of laps. A 1500 m race is 3 laps plus 300 m. The 5K is 12 laps plus 200 m. On a real track the odd piece comes first, so every later split falls on the finish line. Choose &ldquo;At the finish line&rdquo; to see it that way. Choose &ldquo;Every lap from the start&rdquo; if you time yourself with a watch from the gun and want a mark every 400 m.</p>
+
+    <h2>Interval sessions at goal pace</h2>
+    <p>Pick Intervals, enter your goal race and set the repeats. The tool takes the pace of the goal race and shows the time for each repeat. Say your 5K goal is 20:00 and you plan 8 x 400 m with 90 s rest. Each repeat is 1:36.0. The running time is 12:48.0, and the whole session takes 23:18.0 with rest. For repeats longer than a lap, it also lists the split at each lap inside the repeat.</p>
+
+    <h2>Lane 1 assumption</h2>
+    <p>The tool assumes you run in lane 1, and that a lap is exactly the lap length you pick. World Athletics measures a standard 400 m track along a line 30 cm out from the inside edge of lane 1. If you run wide in lane 2 for a whole lap, you cover about 7.7 m extra per lap (2 &times; &pi; &times; 1.22 m lane width). That adds about 1.8 s per lap at 1:36 pace. Add that time to your targets if you cannot stay in lane 1.</p>
+
+    <h2>Pace band, print and copy</h2>
+    <p>The pace band shows the running time for each marker, with the lap time under it. Press Print pace band. The print layout shows only the band, in black on white, so you can cut it into strips and tape one to your wrist. Copy splits puts the table on your clipboard, ready to paste into a note or spreadsheet.</p>
+    <p><a href="#tool">Back to the calculator</a></p>
+  </article>
+</section>
+
+<style is:global>
+  .prose-site .table-wrap { overflow-x: auto; margin: 0 0 1.25rem; border: 1px solid var(--line); border-radius: .75rem; max-width: 28rem; }
+  .prose-site table { width: 100%; border-collapse: collapse; font-size: .975rem; }
+  .prose-site th, .prose-site td { text-align: left; padding: .5rem .85rem; }
+  .prose-site thead th { background: var(--brand-soft); color: var(--brand-ink); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+  .prose-site tbody tr + tr td { border-top: 1px solid var(--line); }
+  .prose-site td { font-variant-numeric: tabular-nums; }
+  .prose-site td:first-child { font-weight: 650; white-space: nowrap; }
+</style>

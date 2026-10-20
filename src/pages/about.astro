@@ -1,0 +1,17 @@
+---
+import Page from '../layouts/Page.astro';
+import site from '../site.config.ts';
+import { url } from '../lib/url.ts';
+---
+<Page title="About" description={`About ${site.name}: a free lap split and pace band calculator for runners and coaches.`}>
+  <p>{site.name} turns a goal time into lap splits for any distance. Pick a 200 m, 300 m, 400 m or custom lap. Choose an even, negative or positive pace. You can also enter a lap time to get a finish time, build an interval session, and print a pace band.</p>
+  <h2>What it does</h2>
+  <p>It answers as you type, so there is no button to press. The table lists the time for each lap and the running total. The pace band shows the same numbers in a form you can print or copy.</p>
+  <h2>How it works</h2>
+  <p>Time per lap equals goal time divided by distance, times lap length. For a negative or positive split, pace changes in a straight line across the race, and the total time stays the same. A mile is 1609.344 m. The tool assumes you run in lane 1, on a lap measured 30 cm out from the inside edge of the lane. Running in lane 2 adds about 7.7 m per 400 m lap.</p>
+  <p>The calculator runs in your browser and does not send what you type. We do not ask you to create an account. Your last settings stay on your device.</p>
+  <h2>Limits</h2>
+  <p>This tool is arithmetic. It does not know your fitness, the weather or the wind. Treat the splits as targets, and adjust them with your coach.</p>
+  <h2>Contact</h2>
+  <p>Questions or ideas? Write to <a href={`mailto:${site.email}`}>{site.email}</a> or visit the <a href={url('contact/')}>Contact page</a>.</p>
+</Page>
