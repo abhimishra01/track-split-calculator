@@ -175,6 +175,7 @@ import { RACES } from '../lib/splits.js';
 </section>
 
 <style is:global>
+  html { scroll-padding-bottom: 5rem; } /* the option buttons are hidden inputs, so keep a focused one clear of the screen edge */
   .field { display:block; width:100%; height:3.25rem; border-radius:.75rem; border:1px solid var(--edge); background:var(--paper); color:var(--ink); padding:0 .75rem; font-size:1.0625rem; font-weight:600; font-variant-numeric:tabular-nums; outline:none; }
   .field-big { height:3.5rem; font-family:var(--font-mono); font-size:1.875rem; font-weight:700; text-align:center; }
   select.field { cursor:pointer; padding-right:.5rem; }
@@ -272,11 +273,13 @@ import { RACES } from '../lib/splits.js';
   };
   type Fail = { error: string; fields?: string[] };
 
+  const MIN_DISTANCE_M = 50; // below this the pace numbers are meaningless
+  const MAX_REST_S = 3600;
   function distanceM(): number | null {
     if (val('dist') !== 'custom') return RACE_M[val('dist')] ?? null;
     const n = parseNumber(val('cdist'));
     const f = UNIT_M[val('cunit') as 'm'];
-    return n && n > 0 && f ? n * f : null;
+    return n && n * f >= MIN_DISTANCE_M ? n * f : null;
   }
   function lapM(): number | null {
     if (radio('lap') !== 'custom') return Number(radio('lap'));
@@ -291,7 +294,7 @@ import { RACES } from '../lib/splits.js';
     const step = Number(radio('step')) || 0.1;
     const D = distanceM();
     const lap = lapM();
-    if (D === null) return { error: 'Enter a race distance above 0.', fields: ['cdist'] };
+    if (D === null) return { error: `Enter a race distance of at least ${MIN_DISTANCE_M} m.`, fields: ['cdist'] };
     if (lap === null) return { error: 'Enter a lap length of at least 50 m.', fields: ['clap'] };
     const from = radio('from') === 'line' ? 'line' : 'start';
     const dTxt = `${formatDistance(D)} m`;
@@ -302,10 +305,11 @@ import { RACES } from '../lib/splits.js';
       const reps = parseNumber(val('reps'));
       if (!reps || reps < 1 || reps > 100 || !Number.isInteger(reps)) return { error: 'Enter 1 to 100 repeats.', fields: ['reps'] };
       const repM = radio('rep') === 'custom' ? parseNumber(val('crep')) : Number(radio('rep'));
-      if (!repM || repM <= 0) return { error: 'Enter a repeat distance above 0.', fields: ['crep'] };
+      if (!repM || repM < MIN_DISTANCE_M) return { error: `Enter a repeat distance of at least ${MIN_DISTANCE_M} m.`, fields: ['crep'] };
       const restRaw = val('rest').trim();
       const rest = restRaw === '' ? 0 : parseTime(restRaw, 's');
       if (rest === null) return { error: 'Enter the rest as seconds or m:ss, like 90 or 1:30.', fields: ['rest'] };
+      if (rest > MAX_REST_S) return { error: 'Enter a rest of one hour or less.', fields: ['rest'] };
       const r = intervals({ reps, repM, paceSPerM: T / D, restS: rest, lap, step });
       if (r.error) return { error: r.error };
       const rm = lapLabel(repM);
@@ -352,7 +356,11 @@ import { RACES } from '../lib/splits.js';
     }
     if (T === null) return { error: 'Check the lap time and distance.' };
     const r = raceSplits({ distance: D, time: T, lap, from, delta, step });
-    if (r.error) return { error: r.error, fields: delta ? ['delta'] : [] };
+    if (r.error) {
+      const fields = r.error.includes('second-half') ? ['delta'] : r.error.includes('too long') ? [mode === 'lap' ? 'laptime' : 'goal']
+        : [radio('lap') === 'custom' ? 'clap' : '', val('dist') === 'custom' ? 'cdist' : ''].filter(Boolean);
+      return { error: r.error, fields };
+    }
 
     type SRow = { n: number; to: number; seg: number; split: number; cum: number };
     const isLap = (x: SRow) => Math.abs(x.seg - lap) < 1e-6;
@@ -384,7 +392,7 @@ import { RACES } from '../lib/splits.js';
       label, main, sub,
       head: ['Split', 'At', 'Lap time', 'Total time'],
       rows: r.rows.map((x: SRow) => [String(x.n), `${formatDistance(x.to)} m`, formatTime(x.split, step), formatTime(x.cum, step)]),
-      note: [odd ? `One split covers ${formatDistance(odd.seg)} m, not a full lap.` : '', paceWarning(r.perMile)].filter(Boolean).join(' '),
+      note: [odd && D > lap ? `One split covers ${formatDistance(odd.seg)} m, not a full lap.` : '', paceWarning(r.perMile)].filter(Boolean).join(' '),
       bandTitle: title,
       band: r.rows.map((x: SRow) => ({ l: `${formatDistance(x.to)} m`, t: formatTime(x.cum, step), s: `lap ${formatTime(x.split, step)}` })),
       copy: splitsText(title, r.rows, step),
