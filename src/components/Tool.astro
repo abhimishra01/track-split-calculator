@@ -6,7 +6,7 @@ import { RACES } from '../lib/splits.js';
   <noscript><p class="mb-4 rounded-xl bg-brand-soft p-3 text-sm">This calculator needs JavaScript. The table in the article below lists common 400 m splits you can read without it.</p></noscript>
   <div class="flex flex-col gap-6 md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-start md:gap-8">
 
-    <!-- Inputs. On a phone: what you want, then the result, then the settings. -->
+    <!-- Inputs. On a phone: what you want and the settings that change the answer, then the result, then lap length and rounding. `display: contents` lets the groups sit on either side of the result. -->
     <div class="contents md:block md:space-y-6">
       <div class="order-1 space-y-5 md:order-none">
         <fieldset>
@@ -49,8 +49,8 @@ import { RACES } from '../lib/splits.js';
         </div>
       </div>
 
-      <div class="order-3 space-y-5 md:order-none">
-        <fieldset>
+      <div class="contents md:block md:space-y-5">
+        <fieldset class="order-3 md:order-none">
           <legend class="mb-2 text-sm font-semibold">Lap length</legend>
           <div class="grid grid-cols-4 gap-2" id="lap-group">
             <label class="seg"><input type="radio" name="lap" value="200" class="peer sr-only" /><span class="seg-face">200 m</span></label>
@@ -63,10 +63,10 @@ import { RACES } from '../lib/splits.js';
             <input id="clap" type="text" inputmode="decimal" autocomplete="off" value="250" class="field w-28" />
             <span class="text-sm text-muted">m</span>
           </div>
-          <p class="mt-1 text-xs text-muted">400 m is a standard outdoor track. Many indoor tracks are 200 m.</p>
+          <p class="mt-1 text-xs text-muted">400 m is a standard outdoor track. Many indoor tracks are 200 m. Your settings are saved on this device.</p>
         </fieldset>
 
-        <fieldset data-modes="goal">
+        <fieldset data-modes="goal" class="order-1 md:order-none">
           <legend class="mb-2 text-sm font-semibold">Pacing</legend>
           <div class="grid grid-cols-3 gap-2" id="strat-group">
             <label class="seg"><input type="radio" name="strat" value="even" class="peer sr-only" checked /><span class="seg-face">Even</span></label>
@@ -81,11 +81,11 @@ import { RACES } from '../lib/splits.js';
               <button type="button" class="chip" data-pct="2"></button>
               <button type="button" class="chip" data-pct="3"></button>
             </div>
-            <p class="mt-1 text-xs text-muted">The chips are 1, 2 and 3 percent of the goal time. Pace changes a little on every lap.</p>
+            <p class="mt-1 text-xs text-muted">Quick values: each chip is 1, 2 or 3 percent of your goal time, in seconds. Pace changes a little on every lap.</p>
           </div>
         </fieldset>
 
-        <div data-modes="int" class="hidden space-y-5">
+        <div data-modes="int" class="order-1 hidden space-y-5 md:order-none">
           <div>
             <label for="reps" class="mb-2 block text-sm font-semibold">Repeats</label>
             <div class="flex items-stretch gap-2">
@@ -118,7 +118,7 @@ import { RACES } from '../lib/splits.js';
           </div>
         </div>
 
-        <fieldset data-modes="goal lap" id="from-wrap">
+        <fieldset data-modes="goal lap" id="from-wrap" class="order-1 md:order-none">
           <legend class="mb-2 text-sm font-semibold">Where do you read splits?</legend>
           <div class="grid grid-cols-2 gap-2" id="from-group">
             <label class="seg"><input type="radio" name="from" value="start" class="peer sr-only" checked /><span class="seg-face">Every lap from the start</span></label>
@@ -127,7 +127,7 @@ import { RACES } from '../lib/splits.js';
           <p class="mt-1 text-xs text-muted">This matters only when the race is not a whole number of laps. A mile is 4 laps plus 9.3 m. At the finish line, the odd distance comes first.</p>
         </fieldset>
 
-        <fieldset>
+        <fieldset class="order-3 md:order-none">
           <legend class="mb-2 text-sm font-semibold">Round times to</legend>
           <div class="grid grid-cols-2 gap-2" id="step-group">
             <label class="seg"><input type="radio" name="step" value="0.1" class="peer sr-only" checked /><span class="seg-face">0.1 second</span></label>
@@ -148,7 +148,7 @@ import { RACES } from '../lib/splits.js';
       </div>
 
       <h2 id="table-h" class="mt-5 text-sm font-semibold">Splits</h2>
-      <div class="mt-2 max-h-[26rem] overflow-auto rounded-xl border border-line tbl" tabindex="0" role="region" aria-labelledby="table-h">
+      <div class="mt-2 md:max-h-[26rem] overflow-auto rounded-xl border border-line tbl" tabindex="0" role="region" aria-labelledby="table-h">
         <table class="w-full min-w-[19rem] text-left text-sm tabular-nums">
           <caption class="sr-only" id="table-cap">Lap splits</caption>
           <thead class="sticky top-0 bg-brand-soft text-xs uppercase tracking-wide text-brand-ink">
@@ -168,7 +168,7 @@ import { RACES } from '../lib/splits.js';
       <div id="band" class="mt-1 rounded-xl border border-line bg-paper p-3" role="group" aria-labelledby="band-h">
         <p id="band-title" class="mb-2 text-xs font-semibold"></p>
         <ol id="band-cells" class="grid grid-cols-[repeat(auto-fill,minmax(5.5rem,1fr))] gap-1.5"></ol>
-        <p class="mt-2 text-xs text-muted band-foot">Lane 1 assumed: a lap is measured 30 cm out from the inside edge of lane 1. A whole lap in lane 2 adds about 7.7 m.</p>
+        <p class="mt-2 text-xs text-muted band-foot">Lane 1 assumed: a lap is measured 30 cm out from the inside edge of lane 1. A whole lap in lane 2 adds about 7.0 m by the official measuring lines (7.7 m if you count a full 1.22 m lane width).</p>
       </div>
     </div>
   </div>
@@ -179,7 +179,7 @@ import { RACES } from '../lib/splits.js';
   .field-big { height:3.5rem; font-family:var(--font-mono); font-size:1.875rem; font-weight:700; text-align:center; }
   select.field { cursor:pointer; padding-right:.5rem; }
   .field:focus { border-color:var(--brand); box-shadow:0 0 0 3px color-mix(in oklab, var(--brand) 30%, transparent); }
-  .field[aria-invalid="true"] { border-color:#dc2626; }
+  .field[aria-invalid="true"], :root[data-skin][data-theme] #tool .field[aria-invalid="true"] { border-color:#dc2626; box-shadow:0 0 0 2px #dc2626; }
   .seg-face { display:flex; min-height:3rem; height:100%; align-items:center; justify-content:center; border-radius:.75rem; border:1px solid var(--edge); background:var(--paper); padding:.4rem .5rem; font-weight:600; font-size:.9rem; line-height:1.2; cursor:pointer; text-align:center; transition:background-color .12s,border-color .12s; user-select:none; }
   .seg-face:hover { border-color: var(--brand); }
   .peer:checked + .seg-face { background: var(--brand); border-color: var(--brand); color:#fff; }
@@ -218,7 +218,7 @@ import { RACES } from '../lib/splits.js';
 <script>
   import {
     RACES, UNIT_M, parseNumber, parseTime, formatTime, formatDistance, roundTo, raceSplits, finishFromLap,
-    intervals, splitsText,
+    intervals, splitsText, paceWarning, M_PER_MILE,
   } from '../lib/splits.js';
 
   type Mode = 'goal' | 'lap' | 'int';
@@ -235,6 +235,8 @@ import { RACES } from '../lib/splits.js';
   const bad = (id: string, on: boolean) => { if (on) $(id).setAttribute('aria-invalid', 'true'); else $(id).removeAttribute('aria-invalid'); };
 
   const RACE_M: Record<string, number> = Object.fromEntries(RACES.map((r: { id: string; m: number }) => [r.id, r.m]));
+  // Values our own selects and radios allow. Anything else in saved settings is ignored.
+  const allowed = (name: string) => [...root.querySelectorAll<HTMLInputElement>(`input[name="${name}"]`)].map((e) => e.value);
   const FIELDS = ['dist', 'cdist', 'cunit', 'goal', 'laptime', 'clap', 'delta', 'reps', 'crep', 'rest'];
   const RADIOS = ['mode', 'lap', 'strat', 'rep', 'from', 'step'];
 
@@ -253,9 +255,13 @@ import { RACES } from '../lib/splits.js';
       if (!raw) return;
       const s = JSON.parse(raw);
       if (!s || typeof s !== 'object') return;
-      FIELDS.forEach((f) => { if (typeof s[f] === 'string' && s[f].length < 20) setVal(f, s[f]); });
-      RADIOS.forEach((r) => { if (typeof s[r] === 'string') setRadio(r, s[r]); });
-      if (![...RACES.map((x: { id: string }) => x.id), 'custom'].includes(val('dist'))) setVal('dist', '5000');
+      FIELDS.forEach((f) => {
+        if (typeof s[f] !== 'string' || s[f].length >= 20) return;
+        const el = $<HTMLInputElement | HTMLSelectElement>(f);
+        if (el instanceof HTMLSelectElement && ![...el.options].some((o) => o.value === s[f])) return;
+        setVal(f, s[f]);
+      });
+      RADIOS.forEach((r) => { if (typeof s[r] === 'string' && allowed(r).includes(s[r])) setRadio(r, s[r]); });
     } catch { /* ignore */ }
   }
 
@@ -269,7 +275,8 @@ import { RACES } from '../lib/splits.js';
   function distanceM(): number | null {
     if (val('dist') !== 'custom') return RACE_M[val('dist')] ?? null;
     const n = parseNumber(val('cdist'));
-    return n && n > 0 ? n * UNIT_M[val('cunit') as 'm'] : null;
+    const f = UNIT_M[val('cunit') as 'm'];
+    return n && n > 0 && f ? n * f : null;
   }
   function lapM(): number | null {
     if (radio('lap') !== 'custom') return Number(radio('lap'));
@@ -303,16 +310,17 @@ import { RACES } from '../lib/splits.js';
       if (r.error) return { error: r.error };
       const rm = lapLabel(repM);
       type IRow = { n: number; repTime: number; clock: number };
-      const inside = r.inside.length > 1 ? `Splits inside a repeat: ${r.inside.map((x: { to: number; cum: number }) => `${lapLabel(x.to)} ${formatTime(x.cum, step)}`).join(', ')}.` : '';
+      const insideShown = r.inside.slice(0, 12);
+      const inside = r.inside.length > 1 ? `Splits inside a repeat: ${insideShown.map((x: { to: number; cum: number }) => `${lapLabel(x.to)} ${formatTime(x.cum, step)}`).join(', ')}${r.inside.length > insideShown.length ? ', and more' : ''}.` : '';
       const restTxt = rest > 0 ? ` With ${formatTime(rest, step)} rest: ${formatTime(r.totalTime, step)} in total.` : '';
       const title = `${reps} x ${rm} at ${dTxt} goal pace (${formatTime(T, step)})${rest > 0 ? `, ${formatTime(rest, step)} rest` : ''}`;
       return {
         label: `Each ${rm} repeat`,
         main: formatTime(r.repTime, step),
         sub: `${reps} x ${rm} = ${formatDistance(r.workDistance)} m in ${formatTime(r.workTime, step)} of running.${restTxt} Goal pace: ${dTxt} in ${formatTime(T, step)}.`,
-        head: ['Repeat', 'Repeat time', rest > 0 ? 'Clock (with rest)' : 'Clock'],
+        head: ['Repeat', 'Repeat time', 'Clock'],
         rows: r.rows.map((x: IRow) => [String(x.n), formatTime(x.repTime, step), formatTime(x.clock, step)]),
-        note: inside,
+        note: [inside, paceWarning((T / D) * M_PER_MILE)].filter(Boolean).join(' '),
         bandTitle: title,
         band: r.rows.map((x: IRow) => ({ l: `Rep ${x.n}`, t: formatTime(x.clock, step), s: `rep ${formatTime(x.repTime, step)}` })),
         copy: [title, ['Repeat', 'Repeat time', 'Clock'].join('\t'),
@@ -337,7 +345,7 @@ import { RACES } from '../lib/splits.js';
       const strat = radio('strat');
       if (strat !== 'even') {
         const n = parseNumber(val('delta'));
-        if (n === null) return { error: 'Enter the difference between the halves in seconds.', fields: ['delta'] };
+        if (n === null || n < 0) return { error: 'Enter the difference between the halves as a positive number of seconds. The Negative and Positive buttons set the direction.', fields: ['delta'] };
         delta = (strat === 'neg' ? -1 : 1) * n;
         pacingTxt = n === 0 ? 'even pace' : strat === 'neg' ? `negative split, second half ${plain(n)} s faster` : `positive split, second half ${plain(n)} s slower`;
       }
@@ -376,7 +384,7 @@ import { RACES } from '../lib/splits.js';
       label, main, sub,
       head: ['Split', 'At', 'Lap time', 'Total time'],
       rows: r.rows.map((x: SRow) => [String(x.n), `${formatDistance(x.to)} m`, formatTime(x.split, step), formatTime(x.cum, step)]),
-      note: odd ? `One split covers ${formatDistance(odd.seg)} m, not a full lap.` : '',
+      note: [odd ? `One split covers ${formatDistance(odd.seg)} m, not a full lap.` : '', paceWarning(r.perMile)].filter(Boolean).join(' '),
       bandTitle: title,
       band: r.rows.map((x: SRow) => ({ l: `${formatDistance(x.to)} m`, t: formatTime(x.cum, step), s: `lap ${formatTime(x.split, step)}` })),
       copy: splitsText(title, r.rows, step),
@@ -385,7 +393,7 @@ import { RACES } from '../lib/splits.js';
     };
   }
 
-  let lastCopy = '';
+  let current = ''; // copy text of the valid result; empty when the numbers have an error
 
   function applyVisibility() {
     const mode = radio('mode');
@@ -413,10 +421,27 @@ import { RACES } from '../lib/splits.js';
     });
   }
 
+  // Link an invalid field to the message in the result box, so a screen reader reads the reason.
+  function markDescribed(fields: string[]) {
+    fields.forEach((f) => {
+      const el = $(f);
+      el.dataset.d = el.getAttribute('aria-describedby') ?? '';
+      el.setAttribute('aria-describedby', [el.dataset.d, 'res-sub'].filter(Boolean).join(' '));
+    });
+    FIELDS.forEach((f) => {
+      const el = $(f);
+      if (el.dataset.d !== undefined && !fields.includes(f)) {
+        if (el.dataset.d) el.setAttribute('aria-describedby', el.dataset.d); else el.removeAttribute('aria-describedby');
+        delete el.dataset.d;
+      }
+    });
+  }
+
   function render() {
     applyVisibility();
     updatePctChips();
     FIELDS.forEach((f) => bad(f, false));
+    markDescribed([]);
     const v = compute();
     if ('error' in v) {
       $('res-label').textContent = 'Check your numbers';
@@ -428,7 +453,8 @@ import { RACES } from '../lib/splits.js';
       $('band-title').textContent = '';
       $('table-note').textContent = '';
       (v.fields ?? []).forEach((f) => bad(f, true));
-      lastCopy = '';
+      markDescribed(v.fields ?? []);
+      current = '';
       return;
     }
     $('res-label').textContent = v.label;
@@ -437,12 +463,13 @@ import { RACES } from '../lib/splits.js';
     $('table-h').textContent = v.tableH;
     $('table-cap').textContent = v.cap;
     const last = v.head.length - 1;
+    // Safe: every value here is a number we formatted, never raw user input. Keep it that way.
     $('thead-row').innerHTML = v.head.map((h, i) => `<th scope="col" class="font-semibold${i > 0 && (i === last || v.head.length === 3 || i > 1) ? ' num' : ''}">${h}</th>`).join('');
     $('rows').innerHTML = v.rows.map((r) => `<tr>${r.map((c, i) => i === 0 ? `<th scope="row">${c}</th>` : `<td class="${i === last ? 'num strong' : i > 1 || v.head.length === 3 ? 'num' : ''}">${c}</td>`).join('')}</tr>`).join('');
     $('table-note').textContent = v.note;
     $('band-title').textContent = v.bandTitle;
     $('band-cells').innerHTML = v.band.map((b) => `<li><span class="b-l">${b.l}</span><span class="b-t">${b.t}</span><span class="b-s">${b.s}</span></li>`).join('');
-    lastCopy = v.copy;
+    current = v.copy;
   }
 
   function onChange() { render(); save(); }
@@ -463,15 +490,19 @@ import { RACES } from '../lib/splits.js';
   $('reps-dec').addEventListener('click', () => bump(-1));
   $('reps-inc').addEventListener('click', () => bump(1));
 
-  $('print-btn').addEventListener('click', () => { if (lastCopy) window.print(); });
+  $('print-btn').addEventListener('click', () => {
+    if (current) { window.print(); return; }
+    $('copy-status').textContent = 'Nothing to print yet. Fix the numbers above.';
+    setTimeout(() => { $('copy-status').textContent = ''; }, 4000);
+  });
   $('copy-btn').addEventListener('click', async () => {
     const status = $('copy-status');
-    if (!lastCopy) { status.textContent = 'Nothing to copy yet. Fix the numbers above.'; return; }
+    if (!current) { status.textContent = 'Nothing to copy yet. Fix the numbers above.'; return; }
     let ok = false;
-    try { await navigator.clipboard.writeText(lastCopy); ok = true; } catch {
+    try { await navigator.clipboard.writeText(current); ok = true; } catch {
       try {
         const ta = document.createElement('textarea');
-        ta.value = lastCopy; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        ta.value = current; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
         document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
       } catch { ok = false; }
     }
@@ -482,13 +513,13 @@ import { RACES } from '../lib/splits.js';
   // Build a clean copy of the band for printing, and remove it afterwards. Works for the button and for Ctrl+P.
   function buildPrint() {
     removePrint();
-    if (!lastCopy) return;
+    if (!current) return;
     const d = document.createElement('div');
     d.id = 'print-root';
     const t = document.createElement('p'); t.className = 'pr-title'; t.textContent = $('band-title').textContent ?? '';
-    const ol = document.createElement('ul'); ol.className = 'pr-cells'; ol.innerHTML = $('band-cells').innerHTML;
+    const list = document.createElement('ul'); list.className = 'pr-cells'; list.innerHTML = $('band-cells').innerHTML;
     const f = document.createElement('p'); f.className = 'pr-foot'; f.textContent = root.querySelector('.band-foot')?.textContent ?? '';
-    d.append(t, ol, f);
+    d.append(t, list, f);
     document.body.appendChild(d);
   }
   function removePrint() { document.getElementById('print-root')?.remove(); }

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   parseTime, parseNumber, formatTime, formatDistance, roundTo, markers, raceSplits, finishFromLap,
-  intervals, paces, laneExtraPerLap, splitsText, M_PER_MILE, UNIT_M,
+  intervals, paces, laneExtraPerLap, paceWarning, splitsText, M_PER_MILE, UNIT_M,
 } from '../src/lib/splits.js';
 
 const near = (a, b, eps = 1e-6) => assert.ok(Math.abs(a - b) < eps, `${a} vs ${b}`);
@@ -156,9 +156,41 @@ test('intervals: errors', () => {
   assert.ok(intervals({ reps: 0, repM: 400, paceSPerM: 0.2, lap: 400 }).error);
   assert.ok(intervals({ reps: 101, repM: 400, paceSPerM: 0.2, lap: 400 }).error);
 });
-test('lane 2 adds about 7.7 m per 400 m lap', () => {
-  near(laneExtraPerLap(1), 7.665, 0.01);
-  near(laneExtraPerLap(2), 15.33, 0.02);
+test('lane 2 adds 7.04 m by the measuring lines and 7.67 m by pure geometry', () => {
+  near(laneExtraPerLap(1), 7.037, 0.01);
+  near(laneExtraPerLap(1, false), 7.665, 0.01);
+  near(laneExtraPerLap(2, false), 15.33, 0.02);
+  near(laneExtraPerLap(2), 7.037 + 7.665, 0.02);
+});
+test('parseNumber reads thousands commas', () => {
+  assert.equal(parseNumber('10,000'), 10000);
+  assert.equal(parseNumber('1,000,000'), 1000000);
+  assert.equal(parseNumber('10,000.5'), 10000.5);
+  assert.equal(parseNumber('0,75'), 0.75);
+  assert.equal(parseNumber('1,50'), 1.5);
+});
+test('intervals reject a huge repeat distance', () => {
+  assert.ok(intervals({ reps: 1, repM: 400000, paceSPerM: 0.24, lap: 400 }).error);
+  assert.ok(intervals({ reps: 1, repM: 1e9, paceSPerM: 0.24, lap: 50 }).error);
+  assert.ok(!intervals({ reps: 1, repM: 100000, paceSPerM: 0.24, lap: 400 }).error);
+});
+test('parseTime accepts comma tenths', () => {
+  near(parseTime('1:36,5'), 96.5);
+});
+test('negative split read at the finish line keeps the total', () => {
+  const r = raceSplits({ distance: 1609.344, time: 240, lap: 400, from: 'line', delta: -4 });
+  near(r.rows[r.rows.length - 1].cum, 240);
+  near(r.rows[0].to, 9.344, 1e-3);
+});
+test('intervals with one rep and no rest', () => {
+  const r = intervals({ reps: 1, repM: 400, paceSPerM: 0.24, restS: 0, lap: 400 });
+  near(r.totalTime, 96);
+  assert.equal(r.rows.length, 1);
+});
+test('paceWarning flags slips', () => {
+  assert.equal(paceWarning(6 * 60), '');
+  assert.ok(paceWarning(3600));
+  assert.ok(paceWarning(60));
 });
 test('unit factors', () => {
   assert.equal(UNIT_M.km, 1000);

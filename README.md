@@ -17,7 +17,7 @@ Built with Astro (static) and Tailwind 4. Skin: Retro print. Brand: infield gree
 
 - Time per lap = goal time / distance x lap length. A mile is 1609.344 m (1959 international yard and pound agreement).
 - Negative or positive split: pace changes linearly across the race, p(x) = a + b (x / D - 0.5) with a = T / D and b = 4 d / D, where d is the second-half time minus the first-half time. The total stays T.
-- Lane 1 is measured 30 cm from the inside edge (World Athletics). A lane is 1.22 m wide, so a whole lap one lane out adds 2 pi x 1.22 = 7.7 m.
+- Lane 1 is measured 30 cm from the inside edge (World Athletics). A lane is 1.22 m wide, so a whole lap one lane out adds 2 pi x 1.22 = 7.67 m by geometry. By the measuring lines (lane 1 at 0.30 m, other lanes 0.20 m from the line, TR 14.2 and 14.4) lane 2 is 1.12 m further out, which adds 7.04 m. The page states both. Sources: World Athletics Technical Rules; Scottish Athletics, Rule of the Month, Nov 2022 (https://www.scottishathletics.org.uk/wp-content/uploads/2023/01/Rule-of-the-Month-Nov-2022.pdf).
 
 ## Commands
 

@@ -3,7 +3,15 @@
 
 export const M_PER_MILE = 1609.344;
 export const M_PER_KM = 1000;
-export const LANE_WIDTH_M = 1.22; // World Athletics standard lane width
+export const LANE_WIDTH_M = 1.22; // World Athletics standard lane width (Technical Rule 14.4: 1.22 m +/- 0.01 m)
+// Lane 1 is measured 0.30 m from the curb (TR 14.2). Other lanes are measured 0.20 m from the outer edge of
+// the line on their inside (TR 14.4), so lane 2 runs 1.22 + 0.20 - 0.30 = 1.12 m further out than lane 1.
+export const LANE2_OFFSET_MEASURED_M = LANE_WIDTH_M + 0.2 - 0.3;
+export const MAX_REP_M = 100000;
+export const MIN_PACE_FRACTION = 0.4; // pace may not drop below 40% of the average pace
+// Slowest and fastest paces we accept without a warning, in seconds per mile.
+export const SLOW_MILE_S = 20 * 60;
+export const FAST_MILE_S = 2 * 60;
 export const MAX_ROWS = 500;
 export const MAX_TIME = 100 * 3600;
 
@@ -24,10 +32,13 @@ export const RACES = [
 ];
 export const UNIT_M = { m: 1, km: M_PER_KM, mi: M_PER_MILE };
 
-// Read a number. Accepts "1,5" as 1.5 and ignores spaces. Returns null when it is not a plain number.
+// Read a number. "10,000" is ten thousand (thousands commas). "1,5" and "0,75" are decimals. Spaces are ignored.
+// Returns null when it is not a plain number.
 export function parseNumber(s) {
   if (typeof s === 'number') return Number.isFinite(s) ? s : null;
-  const t = String(s ?? '').trim().replace(/\s+/g, '').replace(',', '.');
+  let t = String(s ?? '').trim().replace(/\s+/g, '');
+  if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(t)) t = t.replace(/,/g, '');
+  else t = t.replace(',', '.');
   if (!/^\d*\.?\d+$|^\d+\.$/.test(t)) return null;
   const n = Number(t);
   return Number.isFinite(n) ? n : null;
@@ -122,7 +133,7 @@ export function raceSplits({ distance, time, lap, from = 'start', delta = 0, ste
   if (Math.ceil(distance / lap) > MAX_ROWS) return { error: 'Too many laps. Use a longer lap length.' };
   const D = distance, T = time;
   const a = T / D, b = (4 * delta) / D;
-  if (a - Math.abs(b) / 2 < a * 0.4) return { error: 'The second-half difference is too large for this time.' };
+  if (a - Math.abs(b) / 2 < a * MIN_PACE_FRACTION) return { error: 'The second-half difference is too large for this time.' };
   const xs = markers(D, lap, from);
   const rows = [];
   let prevX = 0, prevR = 0;
@@ -147,9 +158,10 @@ export function finishFromLap({ lapTime, lap, distance }) {
 export function intervals({ reps, repM, paceSPerM, restS = 0, lap, step = 0.1 }) {
   if (!(reps >= 1) || !(repM > 0) || !(paceSPerM > 0) || !(lap > 0)) return { error: 'Enter reps, a rep distance and a goal.' };
   if (reps > 100) return { error: 'Use 100 reps or fewer.' };
+  if (repM > MAX_REP_M) return { error: 'Use a repeat distance of 100,000 m or less.' };
   const repT = roundTo(repM * paceSPerM, step);
   const xs = markers(repM, lap, 'start');
-  const inside = xs.map((x, i) => ({ to: x, cum: roundTo(x * paceSPerM, step) }));
+  const inside = xs.map((x) => ({ to: x, cum: roundTo(x * paceSPerM, step) }));
   const rest = Math.max(0, restS);
   const rows = [];
   let clock = 0;
@@ -165,8 +177,18 @@ export function intervals({ reps, repM, paceSPerM, restS = 0, lap, step = 0.1 })
 }
 
 // Extra meters per lap when you run the whole lap in a lane n steps outside lane 1 (n = 1 is lane 2).
-export function laneExtraPerLap(lanesOut = 1) {
-  return 2 * Math.PI * LANE_WIDTH_M * lanesOut;
+// By default this uses the World Athletics measuring lines (lane 2: 2 pi x 1.12 = 7.04 m).
+// With measured = false it is the pure geometry of one lane width (2 pi x 1.22 = 7.67 m).
+export function laneExtraPerLap(lanesOut = 1, measured = true) {
+  const offset = measured ? LANE2_OFFSET_MEASURED_M + (lanesOut - 1) * LANE_WIDTH_M : LANE_WIDTH_M * lanesOut;
+  return 2 * Math.PI * offset;
+}
+
+// A warning for a pace that is probably a typing slip, or '' when the pace is plausible.
+export function paceWarning(perMileS) {
+  if (perMileS > SLOW_MILE_S) return 'Check the time: this pace is slower than 20:00 per mile.';
+  if (perMileS < FAST_MILE_S) return 'Check the time: this pace is faster than 2:00 per mile.';
+  return '';
 }
 
 // Plain text for the clipboard (tab separated, pastes into a spreadsheet).

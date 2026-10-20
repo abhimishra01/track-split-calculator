@@ -62,7 +62,14 @@
     <p>Pick Intervals, enter your goal race and set the repeats. The tool takes the pace of the goal race and shows the time for each repeat. Say your 5K goal is 20:00 and you plan 8 x 400 m with 90 s rest. Each repeat is 1:36.0. The running time is 12:48.0, and the whole session takes 23:18.0 with rest. For repeats longer than a lap, it also lists the split at each lap inside the repeat.</p>
 
     <h2>Lane 1 assumption</h2>
-    <p>The tool assumes you run in lane 1, and that a lap is exactly the lap length you pick. World Athletics measures a standard 400 m track along a line 30 cm out from the inside edge of lane 1. If you run wide in lane 2 for a whole lap, you cover about 7.7 m extra per lap (2 &times; &pi; &times; 1.22 m lane width). That adds about 1.8 s per lap at 1:36 pace. Add that time to your targets if you cannot stay in lane 1.</p>
+    <p>The tool assumes you run in lane 1, and that a lap is exactly the lap length you pick. World Athletics measures a standard 400 m track along a line 30 cm out from the inside edge of lane 1. If you run a whole lap in lane 2, you cover extra distance. Two figures exist, and they depend on how you count. The official rule measures lane 1 at 0.30 m from the curb and every other lane at 0.20 m from the line on its inside edge. With 1.22 m lanes, lane 2 is then 1.12 m further out, so a lap adds 2 &times; &pi; &times; 1.12 = 7.04 m. If you simply move out one full lane width of 1.22 m, the geometry gives 2 &times; &pi; &times; 1.22 = 7.67 m. At 1:36 per lap that is about 1.7 s and 1.8 s. Add that time to your targets if you cannot stay in lane 1.</p>
+
+    <h2>Sources</h2>
+    <ul>
+      <li>Mile length: 1 mile = 1609.344 m, from the 1959 <a href="https://en.wikipedia.org/wiki/International_yard_and_pound_agreement" rel="noopener">international yard and pound agreement</a>.</li>
+      <li>Lane width of 1.22 m and where lanes are measured (Rules TR 14.2 and TR 14.4): World Athletics <a href="https://worldathletics.org/about-iaaf/documents/book-of-rules" rel="noopener">Technical Rules</a>, summarized in <a href="https://www.scottishathletics.org.uk/wp-content/uploads/2023/01/Rule-of-the-Month-Nov-2022.pdf" rel="noopener">Scottish Athletics, Rule of the Month, November 2022</a>.</li>
+      <li>The 7.04 m and 7.67 m figures are our own arithmetic from those distances: circumference = 2 &times; &pi; &times; the extra radius. Real tracks vary by a few centimeters.</li>
+    </ul>
 
     <h2>Pace band, print and copy</h2>
     <p>The pace band shows the running time for each marker, with the lap time under it. Press Print pace band. The print layout shows only the band, in black on white, so you can cut it into strips and tape one to your wrist. Copy splits puts the table on your clipboard, ready to paste into a note or spreadsheet.</p>
