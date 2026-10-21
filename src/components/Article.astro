@@ -1,5 +1,9 @@
 ---
 // SEO article for the track split calculator.
+import { raceSplits, parseTime, formatTime } from '../lib/splits.js';
+const indoor = raceSplits({ distance: 3000, time: parseTime('8:00'), lap: 200, from: 'start' });
+const indoor1500 = raceSplits({ distance: 1500, time: parseTime('4:00'), lap: 200, from: 'line' });
+const lapsOf = (r) => r.rows.filter((x) => [1, 5, 10, 15].includes(x.n));
 ---
 <section aria-labelledby="about-tool" class="mx-auto max-w-5xl px-4 pt-16">
   <article class="prose-site">
@@ -60,6 +64,17 @@
 
     <h2>Interval sessions at goal pace</h2>
     <p>Pick Intervals, enter your goal race and set the repeats. The tool takes the pace of the goal race and shows the time for each repeat. Say your 5K goal is 20:00 and you plan 8 x 400 m with 90 s rest. Each repeat is 1:36.0. The running time is 12:48.0, and the whole session takes 23:18.0 with rest. For repeats longer than a lap, it also lists the split at each lap inside the repeat.</p>
+
+    <h2>Indoor track split calculator (200 m)</h2>
+    <p>Indoor tracks are usually 200 m around, so a 400 m split means two laps. Set the lap length to 200 m and the tool gives a split for every lap. Here is a 3000 m race in 8:00. Each lap is 200 &times; 8:00 / 3000 = {formatTime(indoor.rows[0].split)} s, and the race is 15 laps.</p>
+    <div class="overflow-x-auto"><table>
+      <caption class="sr-only">200 m splits for a 3000 m race in 8:00</caption>
+      <thead><tr><th scope="col">Lap</th><th scope="col">Distance (m)</th><th scope="col">Lap time</th><th scope="col">Total time</th></tr></thead>
+      <tbody>
+        {lapsOf(indoor).map((r) => <tr><th scope="row">{r.n}</th><td>{r.to}</td><td>{formatTime(r.split)}</td><td>{formatTime(r.cum)}</td></tr>)}
+      </tbody>
+    </table></div>
+    <p>A 1500 m race is 7.5 laps of 200 m, so the odd half lap comes first when you read splits at the line. For 4:00, the first split is 100 m in {formatTime(indoor1500.rows[0].split)}, then seven full laps of {formatTime(indoor1500.rows[1].split)} each, ending at {formatTime(indoor1500.rows[7].cum)}. Choose &ldquo;At the finish line&rdquo; in the calculator to see this layout. Indoor tracks are banked and tight, so lap times at the same effort can differ from outdoor ones. Use these as a pacing guide.</p>
 
     <h2>Lane 1 assumption</h2>
     <p>The tool assumes you run in lane 1, and that a lap is exactly the lap length you pick. World Athletics measures a standard 400 m track along a line 30 cm out from the inside edge of lane 1. If you run a whole lap in lane 2, you cover extra distance. Two figures exist, and they depend on how you count. The official rule measures lane 1 at 0.30 m from the curb and every other lane at 0.20 m from the line on its inside edge. With 1.22 m lanes, lane 2 is then 1.12 m further out, so a lap adds 2 &times; &pi; &times; 1.12 = 7.04 m. If you simply move out one full lane width of 1.22 m, the geometry gives 2 &times; &pi; &times; 1.22 = 7.67 m. At 1:36 per lap that is about 1.7 s and 1.8 s. Add that time to your targets if you cannot stay in lane 1.</p>
