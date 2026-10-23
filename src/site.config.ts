@@ -20,5 +20,5 @@ export default {
   locale: 'en-US',                    // BCP 47 language tag
   ogImage: '/og.png',
   category: 'UtilitiesApplication',   // schema.org applicationCategory
-  owner: 'Bingemind',                // name used in legal pages (person or business)
+  owner: 'Bingemind (Abhishek Mishra)',                // name used in legal pages (person or business)
 };
